@@ -1,30 +1,35 @@
 NAME = pipex
 
-CC = gcc
-CC_FLAGS = -Wall -Wextra -Werror
-DEBUG_FLAGS = -g -fsanitize=address	# to be deleted
-
 SRCDIR = src
 OBJDIR = obj
 LIBFTDIR = libft
+INCL_DIR = incl
+
+CC = gcc
+CC_FLAGS = -Wall -Wextra -Werror -I $(INCL_DIR)
+# to be deleted
+DEBUG_FLAGS = -g -fsanitize=address
 
 LIBFT = $(LIBFTDIR)/libft.a
-SRC_FILES = main.c
+SRC_FILES = main.c setup.c list_operations.c
 SRC = $(addprefix $(SRCDIR)/,$(SRC_FILES))
 OBJ = $(addprefix $(OBJDIR)/,$(SRC_FILES:.c=.o))
 
 all: $(NAME)
 
 $(NAME): $(OBJ) $(LIBFT)
-	$(CC) $(CC_FLAGS) $(DEBUG_FLAGS) -o $@ $^
+	$(CC) $(CC_FLAGS) -o $@ $^
+
+debug:		#rm debug
+	make "CC_FLAGS = $(CC_FLAGS) $(DEBUG_FLAGS)"
 
 $(OBJ): | $(OBJDIR)
 
 $(OBJDIR):
 	mkdir $(OBJDIR)
 
-$(OBJDIR)/%.o: $(SRCDIR)/%.c
-	$(CC) $(CC_FLAGS) $(DEBUG_FLAGS) -c $? -o $@
+$(OBJDIR)/%.o: $(SRCDIR)/%.c	#rm debug flags
+	$(CC) $(CC_FLAGS) -c $? -o $@
 
 $(LIBFT):
 	make -C $(LIBFTDIR)

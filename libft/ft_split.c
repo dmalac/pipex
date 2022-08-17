@@ -6,7 +6,7 @@
 /*   By: dmalacov <marvin@codam.nl>                   +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/26 12:02:38 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/08/12 18:55:25 by dmalacov      ########   odam.nl         */
+/*   Updated: 2022/08/15 12:53:36 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,7 @@ static void	erase_array(char **array, int i)
 
 	j = 0;
 	while (j <= i)
-	{
-		free(array[j]);
-		j++;
-	}
+		free(array[j++]);
 	free(array);
 }
 
@@ -37,11 +34,7 @@ static char	*fill_array(char const *s, char c, unsigned int start, size_t len)
 	{
 		i = 0;
 		while ((s[start] != c) && (s[start] != '\0'))
-		{
-			str[i] = s[start];
-			i++;
-			start++;
-		}
+			str[i++] = s[start++];
 		str[i] = '\0';
 		return (str);
 	}
@@ -93,10 +86,7 @@ static char	**make_frame(char const *s, char c, int *num_of_str)
 		}
 	}
 	array = (char **) malloc((*num_of_str + 1) * sizeof(char *));
-	if (array == NULL)
-		return (NULL);
-	else
-		return (array);
+	return (array);
 }
 
 char	**ft_split(char const *s, char c)

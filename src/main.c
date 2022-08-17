@@ -6,46 +6,65 @@
 /*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/11 16:50:10 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/08/12 19:16:26 by dmalacov      ########   odam.nl         */
+/*   Updated: 2022/08/17 20:34:05 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
-#include "../libft/libft.h"
+#include <stdlib.h>
+#include <fcntl.h>
+#include <sys/wait.h>
+#include "libft.h"
+#include "main.h"
 #include <stdio.h>	//delete
 
-char	**get_paths(void)
+static void	free_array(char **array)
 {
-	extern char	**environ;
-	char		**paths;
-	int			i;
+	size_t	i;
 
 	i = 0;
-	paths = NULL;
-	while (environ[i])
-	{
-		if (ft_strncmp(environ[i], "PATH=", 5) == 0)
-		{
-			paths = ft_split(environ[i] + 5, ':');
-			return (paths);
-		}
-		i++;
-	}
-	return (paths);
+	while (array[i])
+		free(array[i++]);
+	free (array);
+}
+
+void	error_and_exit(void)
+{
+
+}
+
+void	checkleaks(void)
+{
+	system("leaks pipex");
 }
 
 int	main(int argc, char **argv)
 {
 	char	**paths;
-	char	*infile;
-	int		i;
+	int		pipe_end[2][2];
+	// pid_t	id;
+	t_tasks	*tasks;
 
-	if (argc > 1)
-		infile = argv[1];
+	open_close_pipes(&pipe_end, OPEN);
 	paths = get_paths();	// COULD BE NULL
-	printf("PATHS:\n");
-	i = 0;
-	while (paths[i])
-		printf("%s\n", paths[i++]);
+	tasks = create_tasklist(argc, pipe_end, argv);
+	/* while loop - while task!= NULL */
+		/* PARENT
+			if task_no == 1 || id != 0 -> fork id */
+		/* CHILD
+			figure out what the input is
+			close pipe[w] if necessary
+			read from input
+			close fd
+			prepare cmd
+			perform cmd
+			write output to the correct fd (if pipe: close pipe[r])
+			close fd */
+		/* t_tasks tasks->next */
+
+	// if (id > 0)
+	// 	atexit(checkleaks);
+	free_array(paths);
+	open_close_pipes(&pipe_end, CLOSE);
 	return (0);
 }

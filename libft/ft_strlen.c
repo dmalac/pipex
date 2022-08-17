@@ -1,19 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   libft.h                                            :+:    :+:            */
+/*   ft_strlen.c                                        :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
+/*   By: dmalacov <marvin@codam.nl>                   +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2022/08/12 18:51:07 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/08/12 18:55:38 by dmalacov      ########   odam.nl         */
+/*   Created: 2021/10/05 17:43:23 by dmalacov      #+#    #+#                 */
+/*   Updated: 2022/02/15 10:59:48 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LIBFT_H
-# define LIBFT_H
+#include <stdlib.h>
 
-char	**ft_split(char const *s, char c);
-int		ft_strncmp(const char *s1, const char *s2, size_t n);
+size_t	ft_strlen(const char *str)
+{
+	size_t	len;
 
-#endif
+	len = 0;
+	while (*(str + len) != '\0')
+		len++;
+	return (len);
+}
