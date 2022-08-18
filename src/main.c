@@ -6,7 +6,7 @@
 /*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/11 16:50:10 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/08/17 20:34:05 by dmalacov      ########   odam.nl         */
+/*   Updated: 2022/08/18 18:14:23 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,23 @@ static void	free_array(char **array)
 	free (array);
 }
 
+static void	free_tasklist(t_tasks *tasks)
+{
+	t_tasks	*empty;
+
+	while (tasks)
+	{
+		tasks->task_no = 0;
+		free_array(tasks->cmd_args);
+		tasks->cmd_args = NULL;
+		tasks->input_fd = 0;
+		tasks->output_fd = 0;
+		empty = tasks;
+		tasks = tasks->next;
+		free(empty);
+	}
+}
+
 void	error_and_exit(void)
 {
 
@@ -41,13 +58,13 @@ void	checkleaks(void)
 int	main(int argc, char **argv)
 {
 	char	**paths;
-	int		pipe_end[2][2];
+	t_fds	fds;
 	// pid_t	id;
 	t_tasks	*tasks;
 
-	open_close_pipes(&pipe_end, OPEN);
 	paths = get_paths();	// COULD BE NULL
-	tasks = create_tasklist(argc, pipe_end, argv);
+	get_fds(&fds, argv[1], argv[argc - 1]);
+	tasks = create_tasklist(argc, fds, argv);
 	/* while loop - while task!= NULL */
 		/* PARENT
 			if task_no == 1 || id != 0 -> fork id */
@@ -63,8 +80,12 @@ int	main(int argc, char **argv)
 		/* t_tasks tasks->next */
 
 	// if (id > 0)
-	// 	atexit(checkleaks);
+		// atexit(checkleaks);
+	lst_print(tasks);
 	free_array(paths);
-	open_close_pipes(&pipe_end, CLOSE);
+	free_tasklist(tasks);
+	open_close_pipes(&fds, CLOSE);
+	close(fds.infile_fd);
+	close(fds.outfile_fd);
 	return (0);
 }

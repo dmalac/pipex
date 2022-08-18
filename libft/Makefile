@@ -1,10 +1,12 @@
 NAME = libft.a
 
-CC = gcc
-CC_FLAGS = -Wall -Wextra -Werror
-# DEBUG_FLAGS = -g -fsanitize=address # to be deleted
-
 OBJDIR = obj
+INCL_DIR = ../incl
+
+CC = gcc
+CC_FLAGS = -Wall -Wextra -Werror 
+INCLUDE = -I $(INCL_DIR)
+# DEBUG_FLAGS = -g -fsanitize=address # to be deleted
 
 SRC = ft_split.c ft_strjoin.c ft_strlen.c ft_strncmp.c 
 OBJ = $(addprefix $(OBJDIR)/,$(SRC:.c=.o))
@@ -18,7 +20,7 @@ $(OBJDIR):
 	mkdir $(OBJDIR)
 
 $(OBJDIR)/%.o: %.c
-	$(CC) $(CC_FLAGS) -c $< -o $@
+	$(CC) $(INCLUDE) $(CC_FLAGS) -c $< -o $@
 
 clean:
 	rm -Rf $(OBJDIR)
