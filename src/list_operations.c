@@ -6,7 +6,7 @@
 /*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/17 20:15:25 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/08/18 17:55:47 by dmalacov      ########   odam.nl         */
+/*   Updated: 2022/08/18 19:52:34 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ t_tasks	*lst_new(size_t i, size_t no_of_children, t_fds fds, char **argv)
 		tasks->cmd_args = ft_split(argv[i + 1], ' ');
 		if (!tasks->cmd_args)
 			error_and_exit();	// figure out how to free everything
-		tasks->next = NULL;
+		tasks->next = tasks;
 	}
 	return (tasks);
 }
@@ -48,9 +48,10 @@ void	lst_add_back(t_tasks **lst, t_tasks *new)
 	else
 	{
 		current = *lst;
-		while (current->next)
+		while (current->next->task_no != 1)
 			current = current->next;
 		current->next = new;
+		new->next = *lst;
 	}
 }
 
@@ -58,7 +59,7 @@ void	lst_print(t_tasks *lst)	// to be deleted
 {
 	int	i;
 
-	while (lst->next)
+	while (lst->task_no < lst->next->task_no)
 	{
 		printf("task no. %d:\ncmd: %s\nargs: ", lst->task_no, lst->cmd_args[0]);
 		i = 1;

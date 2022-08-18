@@ -6,7 +6,7 @@
 /*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/16 12:03:26 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/08/18 17:58:47 by dmalacov      ########   odam.nl         */
+/*   Updated: 2022/08/18 19:04:43 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	error_and_exit(void);
 /* setup.c */
 char	**get_paths(void);
 void	open_close_pipes(t_fds *fds, int instruction);
-t_tasks	*create_tasklist(int argc, t_fds fds, char **argv);
+t_tasks	*create_tasklist(int argc, t_fds *fds, char **argv);
 void	get_fds(t_fds *fds, char *infile, char *outfile);
 /* list_operations.c */
 t_tasks	*lst_new(size_t i, size_t no_of_children, t_fds fds, char **argv);
@@ -48,5 +48,7 @@ void	lst_print(t_tasks *lst);	// to be deleted
 /* files_operations.c */
 int		get_infile_fd(char *filename);
 int		get_outfile_fd(char *filename);
+/* tasks.c */
+void	perform_task(t_tasks *task, char **paths, int process);	//remove process
 
 #endif

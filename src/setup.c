@@ -6,7 +6,7 @@
 /*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/17 19:00:02 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/08/18 18:00:45 by dmalacov      ########   odam.nl         */
+/*   Updated: 2022/08/18 18:54:47 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,24 +64,25 @@ void	open_close_pipes(t_fds *fds, int instruction)
 	}
 }
 
-t_tasks	*create_tasklist(int argc, t_fds fds, char **argv)
+t_tasks	*create_tasklist(int argc, t_fds *fds, char **argv)
 {
-	t_tasks	*tasks;
+	t_tasks	*tasklist;
 	t_tasks	*new;
 	size_t	no_of_children;
 	size_t	i;
 
 	i = 1;
 	no_of_children = argc - 3;
-	tasks = NULL;
+	tasklist = NULL;
+	get_fds(fds, argv[1], argv[argc - 1]);
 	while (i <= no_of_children)
 	{
-		new = lst_new(i, no_of_children, fds, argv);
+		new = lst_new(i, no_of_children, *fds, argv);
 		// can be NULL
-		lst_add_back(&tasks, new);
+		lst_add_back(&tasklist, new);
 		i++;
 	}
-	return (tasks);
+	return (tasklist);
 }
 
 void	get_fds(t_fds *fds, char *infile, char *outfile)
