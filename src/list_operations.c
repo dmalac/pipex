@@ -6,7 +6,7 @@
 /*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/17 20:15:25 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/08/18 19:52:34 by dmalacov      ########   odam.nl         */
+/*   Updated: 2022/08/22 14:45:00 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,25 +15,25 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-t_tasks	*lst_new(size_t i, size_t no_of_children, t_fds fds, char **argv)
+t_tasks	*lst_new(size_t task_no, size_t no_of_children, t_fds fds, char **argv)
 {
 	t_tasks	*tasks;
 
 	tasks = malloc(sizeof(t_tasks));
 	if (tasks)
 	{
-		tasks->task_no = i;
-		if (i == 1)
+		tasks->task_no = task_no;
+		if (task_no == 1)
 			tasks->input_fd = fds.infile_fd;
 		else
-			tasks->input_fd = fds.pipe_end[(i % 2) == 1][0];
-		if (i == no_of_children)
+			tasks->input_fd = fds.pipe_end[(task_no % 2) == 1][0];
+		if (task_no == no_of_children)
 			tasks->output_fd = fds.outfile_fd;
 		else
-			tasks->output_fd = fds.pipe_end[(i % 2 == 0)][1];
-		tasks->cmd_args = ft_split(argv[i + 1], ' ');
+			tasks->output_fd = fds.pipe_end[(task_no % 2 == 0)][1];
+		tasks->cmd_args = ft_split(argv[task_no + 1], ' ');
 		if (!tasks->cmd_args)
-			error_and_exit();	// figure out how to free everything
+			error_and_exit(2);	// figure out how to free everything
 		tasks->next = tasks;
 	}
 	return (tasks);

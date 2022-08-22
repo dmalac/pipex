@@ -6,7 +6,7 @@
 /*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/11 16:50:10 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/08/18 20:01:11 by dmalacov      ########   odam.nl         */
+/*   Updated: 2022/08/22 16:43:10 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,11 @@ static void	free_array(char **array)
 	free (array);
 }
 
-static void	free_tasklist(t_tasks *tasklist, int process)
+static void	free_tasklist(t_tasks *tasklist, int n)
 {
 	t_tasks	*empty;
 
-	while (process-- > 0)
+	while (n-- > 0)
 	{
 		tasklist->task_no = 0;
 		free_array(tasklist->cmd_args);
@@ -45,9 +45,20 @@ static void	free_tasklist(t_tasks *tasklist, int process)
 	}
 }
 
-void	error_and_exit(void)
+void	free_and_close(t_tasks *tasklist, char **paths, t_fds fds, int n)
 {
+	free_array(paths);
+	free_tasklist(tasklist, n);
+	open_close_pipes(&fds, CLOSE);
+	close(fds.infile_fd);	// delete?
+	close(fds.outfile_fd);	// delete?
+}
 
+void	error_and_exit(int error_code)
+{
+	if (error_code == INPUT_ERROR)
+		printf("Error: too few arguments\n");
+	exit(0);
 }
 
 void	checkleaks(void)
@@ -55,46 +66,43 @@ void	checkleaks(void)
 	system("leaks pipex");
 }
 
-int	main(int argc, char **argv)
+int	main(int argc, char **argv, char **envp)
 {
 	char	**paths;
 	t_fds	fds;
 	pid_t	id;
 	t_tasks	*task;
-	int		process;	//remove
+	int		cmd_no;
 
-	paths = get_paths();	// COULD BE NULL
+	if (argc < 5)
+		error_and_exit(INPUT_ERROR);
+	paths = get_paths(envp);
 	task = create_tasklist(argc, &fds, argv);
 	id = 1;
-	process = 0;
-	while (task->task_no > process)
+	cmd_no = 0;
+	while (task->task_no > cmd_no)
 	{
 		if (id > 0)
 		{
-			process++;	// remove
+			cmd_no++;
 			id = fork();
 			if (id < 0)
 				perror("Fork");
 		}
-		if (id == 0 && process == task->task_no)
-			perform_task(task, paths, process);	//remove process
+		if (id == 0 && cmd_no == task->task_no)
+			perform_task(task, paths, envp, fds);
+		/* PROBABLY MOVE THIS PART SOMEWHERE ELSE */
+		wait(0);
+		close(task->input_fd);
+		close(task->output_fd);
+		/*  */
 		task = task->next;
 	}
-
 	if (id > 0)
 	{
 		// atexit(checkleaks);
-		//PUT ALL THIS IN ONE FUNCTION FREE_EVERYTHING (TASK, PATHS, FDS, PROCESS)
-		while (wait(NULL) > 0);
-		lst_print(task);
-		free_array(paths);
-		free_tasklist(task, process);
-		open_close_pipes(&fds, CLOSE);
-		close(fds.infile_fd);
-		close(fds.outfile_fd);
+		while (wait(NULL) > 0);	// waitpid?
+		free_and_close(task, paths, fds, cmd_no);
 	}
-	printf("%d: I'm done.\n", id);
-	// if (id > 0)
-	// 	while(1);
 	return (0);
 }

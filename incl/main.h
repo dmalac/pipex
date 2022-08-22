@@ -6,7 +6,7 @@
 /*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/16 12:03:26 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/08/18 19:04:43 by dmalacov      ########   odam.nl         */
+/*   Updated: 2022/08/22 13:04:34 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,12 @@ typedef struct s_fds
 # define OPEN 0
 # define CLOSE 1
 
+# define INPUT_ERROR 1
+
 /* main.c */
-void	error_and_exit(void);
+void	error_and_exit(int error_code);
 /* setup.c */
-char	**get_paths(void);
+char	**get_paths(char **environ);
 void	open_close_pipes(t_fds *fds, int instruction);
 t_tasks	*create_tasklist(int argc, t_fds *fds, char **argv);
 void	get_fds(t_fds *fds, char *infile, char *outfile);
@@ -49,6 +51,6 @@ void	lst_print(t_tasks *lst);	// to be deleted
 int		get_infile_fd(char *filename);
 int		get_outfile_fd(char *filename);
 /* tasks.c */
-void	perform_task(t_tasks *task, char **paths, int process);	//remove process
+void	perform_task(t_tasks *task, char **paths, char **envp, t_fds fds);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/17 19:00:02 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/08/18 18:54:47 by dmalacov      ########   odam.nl         */
+/*   Updated: 2022/08/22 16:43:35 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,8 @@
 #include "main.h"
 #include "libft.h"
 
-char	**get_paths(void)
+char	**get_paths(char **environ)
 {
-	extern char	**environ;
 	char		**paths;
 	char		*temp;
 	size_t		i;
@@ -52,7 +51,7 @@ void	open_close_pipes(t_fds *fds, int instruction)
 		if (pipe(fds->pipe_end[0]) < 0 || pipe(fds->pipe_end[1]) < 0)
 		{
 			perror("Pipe error");
-			error_and_exit();	// error handling to be fine-tuned
+			error_and_exit(2);	// error handling to be fine-tuned
 		}
 	}
 	else
