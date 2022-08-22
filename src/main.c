@@ -6,7 +6,7 @@
 /*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/11 16:50:10 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/08/22 16:43:10 by dmalacov      ########   odam.nl         */
+/*   Updated: 2022/08/22 18:41:58 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,8 @@ void	free_and_close(t_tasks *tasklist, char **paths, t_fds fds, int n)
 	free_array(paths);
 	free_tasklist(tasklist, n);
 	open_close_pipes(&fds, CLOSE);
-	close(fds.infile_fd);	// delete?
-	close(fds.outfile_fd);	// delete?
+	// close(fds.infile_fd);	// delete?
+	// close(fds.outfile_fd);	// delete?
 }
 
 void	error_and_exit(int error_code)
@@ -93,7 +93,8 @@ int	main(int argc, char **argv, char **envp)
 			perform_task(task, paths, envp, fds);
 		/* PROBABLY MOVE THIS PART SOMEWHERE ELSE */
 		wait(0);
-		close(task->input_fd);
+		printf("[parent] about to close fds %d\n", task->output_fd);
+		// close(task->input_fd); -> doesn't work as well with this uncommented
 		close(task->output_fd);
 		/*  */
 		task = task->next;

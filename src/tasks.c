@@ -6,7 +6,7 @@
 /*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/18 18:49:30 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/08/22 16:27:22 by dmalacov      ########   odam.nl         */
+/*   Updated: 2022/08/22 17:46:10 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,13 @@ static void	close_unused_pipe_ends(int task_no, t_fds fds)
 {
 	close(fds.pipe_end[(task_no % 2 == 0)][0]);
 	close(fds.pipe_end[(task_no % 2 == 1)][1]);
+	printf("\n\t[close unused task %d] I just closed pipe[%d][0] (fd %d) and pipe[%d][1] (fd %d)\n", \
+	task_no, (task_no % 2 == 0), fds.pipe_end[(task_no % 2 == 0)][0], (task_no % 2 == 1), fds.pipe_end[(task_no % 2 == 1)][1]);
+	if (task_no == 1)
+	{
+		close(fds.pipe_end[1][0]);
+		printf("\t... and also pipe[1][0] (fd %d)\n", fds.pipe_end[1][0]);
+	}
 }
 
 char	*prepare_cmd(char *cmd, char **paths)
@@ -67,10 +74,12 @@ void	perform_task(t_tasks *task, char **paths, char **envp, t_fds fds)
 {
 	int	result;
 
+	printf("[child %d] I just started\n", task->task_no);
 	close_unused_pipe_ends(task->task_no, fds);
 	if (task->input_fd >= 0)
 	{
 		task->cmd_args[0] = prepare_cmd(task->cmd_args[0], paths);
+		printf("[child %d] am about to execve with input fd %d and output fd %d\n", task->task_no, task->input_fd, task->output_fd);
 		dup2(task->input_fd, STDIN_FILENO);
 		dup2(task->output_fd, STDOUT_FILENO);
 		result = execve(task->cmd_args[0], task->cmd_args, envp);
