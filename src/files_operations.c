@@ -6,7 +6,7 @@
 /*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/16 12:01:11 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/08/18 18:34:50 by dmalacov      ########   odam.nl         */
+/*   Updated: 2022/08/23 16:32:23 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	get_infile_fd(char *filename)
 {
 	int	fd;
 
-	fd = open(filename, O_RDONLY);
+	fd = open(filename, O_RDONLY | O_CLOEXEC);
 	if (fd < 0)
 		perror(filename);
 	return (fd);

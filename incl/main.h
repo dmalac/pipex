@@ -6,7 +6,7 @@
 /*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/16 12:03:26 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/08/22 13:04:34 by dmalacov      ########   odam.nl         */
+/*   Updated: 2022/08/23 19:50:54 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ typedef struct s_tasks
 	char			**cmd_args;
 	int				input_fd;
 	int				output_fd;
+	char			*infile;
+	char			*outfile;
 	struct s_tasks	*next;
 }					t_tasks;
 
@@ -35,6 +37,9 @@ typedef struct s_fds
 # define CLOSE 1
 
 # define INPUT_ERROR 1
+
+# define W 1
+# define R 0
 
 /* main.c */
 void	error_and_exit(int error_code);
@@ -51,6 +56,7 @@ void	lst_print(t_tasks *lst);	// to be deleted
 int		get_infile_fd(char *filename);
 int		get_outfile_fd(char *filename);
 /* tasks.c */
-void	perform_task(t_tasks *task, char **paths, char **envp, t_fds fds);
+// void	perform_task(t_tasks *task, char **paths, char **envp, t_fds fds);
+void	perform_cmd(size_t cmd_no, char **argv, char **paths, char **envp, int pipe_end[2][2]);
 
 #endif

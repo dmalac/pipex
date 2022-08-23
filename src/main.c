@@ -5,18 +5,14 @@
 /*                                                     +:+                    */
 /*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2022/08/11 16:50:10 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/08/22 18:41:58 by dmalacov      ########   odam.nl         */
+/*   Created: 2022/08/23 17:39:55 by dmalacov      #+#    #+#                 */
+/*   Updated: 2022/08/23 20:31:36 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
-#include <stdlib.h>
-#include <fcntl.h>
-#include <sys/wait.h>
-#include "libft.h"
+#include <unistd.h>		// pid_t
 #include "main.h"
-#include <stdio.h>	//delete
+#include <stdio.h>		// delete (printf)
 
 static void	free_array(char **array)
 {
@@ -26,32 +22,6 @@ static void	free_array(char **array)
 	while (array[i])
 		free(array[i++]);
 	free (array);
-}
-
-static void	free_tasklist(t_tasks *tasklist, int n)
-{
-	t_tasks	*empty;
-
-	while (n-- > 0)
-	{
-		tasklist->task_no = 0;
-		free_array(tasklist->cmd_args);
-		tasklist->cmd_args = NULL;
-		tasklist->input_fd = 0;
-		tasklist->output_fd = 0;
-		empty = tasklist;
-		tasklist = tasklist->next;
-		free(empty);
-	}
-}
-
-void	free_and_close(t_tasks *tasklist, char **paths, t_fds fds, int n)
-{
-	free_array(paths);
-	free_tasklist(tasklist, n);
-	open_close_pipes(&fds, CLOSE);
-	// close(fds.infile_fd);	// delete?
-	// close(fds.outfile_fd);	// delete?
 }
 
 void	error_and_exit(int error_code)
@@ -68,42 +38,58 @@ void	checkleaks(void)
 
 int	main(int argc, char **argv, char **envp)
 {
-	char	**paths;
-	t_fds	fds;
 	pid_t	id;
-	t_tasks	*task;
-	int		cmd_no;
+	size_t	cmd_no;
+	char	**paths;
+	size_t	no_of_children;
+	int		pipe_end[2][2];
 
 	if (argc < 5)
 		error_and_exit(INPUT_ERROR);
+	no_of_children = argc - 3;
 	paths = get_paths(envp);
-	task = create_tasklist(argc, &fds, argv);
 	id = 1;
 	cmd_no = 0;
-	while (task->task_no > cmd_no)
+	while (cmd_no < no_of_children)
 	{
+		cmd_no++;
 		if (id > 0)
 		{
-			cmd_no++;
+			if (cmd_no < no_of_children)
+				pipe(pipe_end[cmd_no % 2 == 0]);
 			id = fork();
 			if (id < 0)
-				perror("Fork");
+				perror("Fork");	// replace with error_and_exit?
 		}
-		if (id == 0 && cmd_no == task->task_no)
-			perform_task(task, paths, envp, fds);
-		/* PROBABLY MOVE THIS PART SOMEWHERE ELSE */
-		wait(0);
-		printf("[parent] about to close fds %d\n", task->output_fd);
-		// close(task->input_fd); -> doesn't work as well with this uncommented
-		close(task->output_fd);
-		/*  */
-		task = task->next;
+		if (id > 0)
+		{
+			close(pipe_end[cmd_no % 2 == 0][W]);
+			if (cmd_no > 1)
+				close(pipe_end[(cmd_no - 1) % 2 == 0][R]);
+			// while (1);
+		}
+		if (id == 0)
+		{
+			if (cmd_no < no_of_children)
+				close(pipe_end[cmd_no % 2 == 0][R]);
+			perform_cmd(cmd_no, argv, paths, envp, pipe_end);
+		}
+		/* 
+		open necessary pipe
+		fork
+			-child does its thing
+		close unnecessary end of pipe
+		open necessary pipe
+		fork
+			-child does its thing
+		close unnecessary end of pipe
+		...
+		 */
 	}
 	if (id > 0)
 	{
-		// atexit(checkleaks);
-		while (wait(NULL) > 0);	// waitpid?
-		free_and_close(task, paths, fds, cmd_no);
+		atexit(checkleaks);
+		free_array(paths);
 	}
 	return (0);
 }

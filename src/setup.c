@@ -6,7 +6,7 @@
 /*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/17 19:00:02 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/08/22 16:43:35 by dmalacov      ########   odam.nl         */
+/*   Updated: 2022/08/23 17:24:03 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,28 +65,30 @@ void	open_close_pipes(t_fds *fds, int instruction)
 
 t_tasks	*create_tasklist(int argc, t_fds *fds, char **argv)
 {
-	t_tasks	*tasklist;
+	t_tasks	*top;
 	t_tasks	*new;
 	size_t	no_of_children;
 	size_t	i;
 
 	i = 1;
 	no_of_children = argc - 3;
-	tasklist = NULL;
-	get_fds(fds, argv[1], argv[argc - 1]);
+	top = NULL;
+	// get_fds(fds, argv[1], argv[argc - 1]);
+	open_close_pipes(fds, OPEN);
 	while (i <= no_of_children)
 	{
 		new = lst_new(i, no_of_children, *fds, argv);
-		// can be NULL
-		lst_add_back(&tasklist, new);
+		if (!new)
+			printf("[create tasklist: sth went wrong with mallocing node no. %zu\n", i);
+		lst_add_back(&top, new);
 		i++;
 	}
-	return (tasklist);
+	return (top);
 }
 
-void	get_fds(t_fds *fds, char *infile, char *outfile)
-{
-	open_close_pipes(fds, OPEN);
-	fds->infile_fd = get_infile_fd(infile);
-	fds->outfile_fd = get_outfile_fd(outfile);
-}
+// void	get_fds(t_fds *fds, char *infile, char *outfile)
+// {
+// 	open_close_pipes(fds, OPEN);
+// 	fds->infile_fd = -1;
+// 	fds->outfile_fd = get_outfile_fd(outfile);
+// }

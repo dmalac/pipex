@@ -6,7 +6,7 @@
 /*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/17 20:15:25 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/08/22 14:45:00 by dmalacov      ########   odam.nl         */
+/*   Updated: 2022/08/23 17:24:39 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,25 @@ t_tasks	*lst_new(size_t task_no, size_t no_of_children, t_fds fds, char **argv)
 	{
 		tasks->task_no = task_no;
 		if (task_no == 1)
-			tasks->input_fd = fds.infile_fd;
+		{
+			tasks->input_fd = -1;
+			tasks->infile = argv[1];
+		}
 		else
+		{
 			tasks->input_fd = fds.pipe_end[(task_no % 2) == 1][0];
+			tasks->infile = NULL;
+		}
 		if (task_no == no_of_children)
-			tasks->output_fd = fds.outfile_fd;
+		{
+			tasks->output_fd = -1;
+			tasks->outfile = argv[no_of_children + 2];
+		}
 		else
+		{
 			tasks->output_fd = fds.pipe_end[(task_no % 2 == 0)][1];
+			tasks->outfile = NULL;
+		}
 		tasks->cmd_args = ft_split(argv[task_no + 1], ' ');
 		if (!tasks->cmd_args)
 			error_and_exit(2);	// figure out how to free everything
