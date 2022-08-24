@@ -6,20 +6,21 @@
 /*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/23 17:39:55 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/08/23 20:31:36 by dmalacov      ########   odam.nl         */
+/*   Updated: 2022/08/24 17:41:13 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>		// pid_t
+#include <unistd.h>
 #include "main.h"
+#include "libft.h"
 #include <stdio.h>		// delete (printf)
 
-static void	free_array(char **array)
+void	free_array(char **array)
 {
 	size_t	i;
 
 	i = 0;
-	while (array[i])
+	while (array && array[i])
 		free(array[i++]);
 	free (array);
 }
@@ -31,6 +32,13 @@ void	error_and_exit(int error_code)
 	exit(0);
 }
 
+static void	cleanup(t_tools *tools)
+{
+	free_array(tools->paths);
+	free_array(tools->cmd_args);
+	free(tools);
+}
+
 void	checkleaks(void)
 {
 	system("leaks pipex");
@@ -39,57 +47,28 @@ void	checkleaks(void)
 int	main(int argc, char **argv, char **envp)
 {
 	pid_t	id;
-	size_t	cmd_no;
-	char	**paths;
-	size_t	no_of_children;
+	t_tools	*tools;
 	int		pipe_end[2][2];
 
-	if (argc < 5)
+	if (argc < 5 && argv[1])
 		error_and_exit(INPUT_ERROR);
-	no_of_children = argc - 3;
-	paths = get_paths(envp);
+	tools = tools_init(argc, envp);
 	id = 1;
-	cmd_no = 0;
-	while (cmd_no < no_of_children)
+	while (tools->cmd < tools->total_cmds)
 	{
-		cmd_no++;
+		tools->cmd++;
 		if (id > 0)
-		{
-			if (cmd_no < no_of_children)
-				pipe(pipe_end[cmd_no % 2 == 0]);
-			id = fork();
-			if (id < 0)
-				perror("Fork");	// replace with error_and_exit?
-		}
+			pipe_and_fork(&id, tools->cmd, tools->total_cmds, pipe_end);
 		if (id > 0)
-		{
-			close(pipe_end[cmd_no % 2 == 0][W]);
-			if (cmd_no > 1)
-				close(pipe_end[(cmd_no - 1) % 2 == 0][R]);
-			// while (1);
-		}
+			close_unnecessary_pipes(tools->cmd, pipe_end);
 		if (id == 0)
-		{
-			if (cmd_no < no_of_children)
-				close(pipe_end[cmd_no % 2 == 0][R]);
-			perform_cmd(cmd_no, argv, paths, envp, pipe_end);
-		}
-		/* 
-		open necessary pipe
-		fork
-			-child does its thing
-		close unnecessary end of pipe
-		open necessary pipe
-		fork
-			-child does its thing
-		close unnecessary end of pipe
-		...
-		 */
+			perform_cmd(tools, argv, pipe_end, envp);
 	}
-	if (id > 0)
-	{
-		atexit(checkleaks);
-		free_array(paths);
-	}
+	cleanup(tools);
+	while (id > 0 && wait(NULL))
+		;
 	return (0);
 }
+
+	// if (id > 0)
+		// atexit(checkleaks);

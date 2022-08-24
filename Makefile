@@ -12,7 +12,7 @@ INCLUDE = -I $(INCL_DIR)
 DEBUG_FLAGS = -g -fsanitize=address
 
 LIBFT = $(LIBFTDIR)/libft.a
-SRC_FILES = main.c setup.c list_operations.c files_operations.c tasks.c
+SRC_FILES = main.c parent.c child.c files_operations.c
 SRC = $(addprefix $(SRCDIR)/,$(SRC_FILES))
 OBJ = $(addprefix $(OBJDIR)/,$(SRC_FILES:.c=.o))
 
