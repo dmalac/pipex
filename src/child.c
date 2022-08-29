@@ -6,12 +6,13 @@
 /*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/18 18:49:30 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/08/29 14:40:27 by dmalacov      ########   odam.nl         */
+/*   Updated: 2022/08/29 18:18:46 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
 #include "libft.h"
+#include "errno.h"
 #include <unistd.h>
 
 static char	*prepare_cmd(char *cmd, char **paths)
@@ -62,7 +63,8 @@ int pipe_end[2][2], int when)
 	}
 	if (when == AFTER)
 	{
-		close(pipe_end[cmd % 2 == 0][W]);
+		if (cmd < total_cmds)
+			close(pipe_end[cmd % 2 == 0][W]);
 		if (cmd > 1)
 			close(pipe_end[(cmd - 1) % 2 == 0][R]);
 	}
@@ -81,6 +83,8 @@ char **envp)
 	if (tools->input_fd >= 0 && tools->output_fd >= 0)
 		result = execve(tools->cmd_args[0], tools->cmd_args, envp);
 	close_pipes_child(tools->cmd, tools->total_cmds, pipe_end, AFTER);
-	if (result < 0)
+	if (access(tools->cmd_args[0], F_OK) >= 0)
+		error_and_exit(errno, tools, tools->cmd_args[0]);
+	else
 		error_and_exit(CMD_ERROR, tools, tools->cmd_args[0]);
 }

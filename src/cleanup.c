@@ -6,7 +6,7 @@
 /*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/29 10:59:21 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/08/29 17:16:51 by dmalacov      ########   odam.nl         */
+/*   Updated: 2022/08/29 17:45:17 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,5 +80,7 @@ void	error_and_exit(int error_code, t_tools *tools, char *name)
 	}
 	if (error_code < 0)
 		error_code = 1;
+	if (error_code == 13)
+		error_code = 126;
 	exit(error_code);
 }
