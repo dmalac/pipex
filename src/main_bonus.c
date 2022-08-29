@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   main.c                                             :+:    :+:            */
+/*   main_bonus.c                                       :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/23 17:39:55 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/08/29 14:54:09 by dmalacov      ########   odam.nl         */
+/*   Updated: 2022/08/29 14:53:04 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	main(int argc, char **argv, char **envp)
 	int		pipe_end[2][2];
 	int		exit_code;
 
-	if (argc != 5)
+	if (argc < 5)
 		error_and_exit(INPUT_ERROR, NULL, NULL);
 	tools = tools_init(argc, envp);
 	id = 1;

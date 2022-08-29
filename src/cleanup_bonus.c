@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   cleanup.c                                          :+:    :+:            */
+/*   cleanup_bonus.c                                    :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/29 10:59:21 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/08/29 14:16:50 by dmalacov      ########   odam.nl         */
+/*   Updated: 2022/08/29 14:16:33 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void	error_and_exit(int error_code, t_tools *tools, char *name)
 	{
 		ft_putstr_fd("Error: wrong number of arguments\n", 2);
 		ft_putstr_fd("Required input format: ", 2);
-		ft_putstr_fd("<file1> <cmd1> <cmd2> <file2>\n", 2);
+		ft_putstr_fd("<file1> <cmd1> <cmd2> ... <cmdn> <file2>\n", 2);
 	}
 	else if (error_code == INIT_ERROR)
 		ft_putstr_fd("Error: memory allocation failed\n", 2);

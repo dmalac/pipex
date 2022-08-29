@@ -11,8 +11,11 @@ INCLUDE = -I $(INCL_DIR)
 
 LIBFT = $(LIBFTDIR)/libft.a
 SRC_FILES = main.c parent.c child.c files_ops.c cleanup.c
+BONUS_SRC_FILES = main_bonus.c parent.c child.c files_ops.c cleanup_bonus.c
 SRC = $(addprefix $(SRCDIR)/,$(SRC_FILES))
 OBJ = $(addprefix $(OBJDIR)/,$(SRC_FILES:.c=.o))
+BONUS_SRC = $(addprefix $(SRCDIR)/,$(BONUS_SRC_FILES))
+BONUS_OBJ = $(addprefix $(OBJDIR)/,$(BONUS_SRC_FILES:.c=.o))
 
 all: $(NAME)
 
@@ -30,6 +33,9 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.c
 $(LIBFT):
 	$(MAKE) -C $(LIBFTDIR)
 
+bonus:
+	$(MAKE) "OBJ = $(BONUS_OBJ)"
+
 clean:
 	rm -Rf $(OBJDIR)
 	$(MAKE) clean -C $(LIBFTDIR)
@@ -40,4 +46,4 @@ fclean: clean
 re: fclean
 	$(MAKE)
 
-.PHONY: clean fclean re all
+.PHONY: bonus clean fclean re all
