@@ -7,13 +7,13 @@ CC = gcc
 CC_FLAGS = -Wall -Wextra -Werror 
 INCLUDE = -I $(INCL_DIR)
 
-SRC = ft_putstr_fd.c ft_split.c ft_strjoin.c ft_strlen.c ft_strncmp.c 
-OBJ = $(addprefix $(OBJDIR)/,$(SRC:.c=.o))
+SRCS = ft_putstr_fd.c ft_split.c ft_strjoin.c ft_strlen.c ft_strncmp.c 
+OBJS = $(addprefix $(OBJDIR)/,$(SRCS:.c=.o))
 
-all: $(OBJ)
+all: $(OBJS)
 	ar -rsu $(NAME) $?
 
-$(OBJ): | $(OBJDIR)
+$(OBJS): | $(OBJDIR)
 
 $(OBJDIR):
 	mkdir $(OBJDIR)

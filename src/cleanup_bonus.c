@@ -6,11 +6,12 @@
 /*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/29 10:59:21 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/08/29 14:16:33 by dmalacov      ########   odam.nl         */
+/*   Updated: 2022/08/29 17:14:45 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <string.h>
+#include <unistd.h>
 #include "main.h"
 #include "libft.h"
 
@@ -53,10 +54,10 @@ int	print_error_message(int error_code, char *name)
 	}
 	if (name)
 	{
-		ft_putstr_fd(": ", 2);
+		write(2, ": ", 2);
 		ft_putstr_fd(name, 2);
 	}
-	ft_putstr_fd("\n", 2);
+	write(2, "\n", 1);
 	return (error_code);
 }
 
