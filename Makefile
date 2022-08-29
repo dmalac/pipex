@@ -8,11 +8,9 @@ INCL_DIR = incl
 CC = gcc
 CC_FLAGS = -Wall -Wextra -Werror 
 INCLUDE = -I $(INCL_DIR)
-# to be deleted
-DEBUG_FLAGS = -g -fsanitize=address
 
 LIBFT = $(LIBFTDIR)/libft.a
-SRC_FILES = main.c parent.c child.c files_operations.c
+SRC_FILES = main.c parent.c child.c files_ops.c cleanup.c
 SRC = $(addprefix $(SRCDIR)/,$(SRC_FILES))
 OBJ = $(addprefix $(OBJDIR)/,$(SRC_FILES:.c=.o))
 
@@ -21,28 +19,25 @@ all: $(NAME)
 $(NAME): $(OBJ) $(LIBFT)
 	$(CC) $(INCLUDE) $(CC_FLAGS) -o $@ $^
 
-debug:		#rm debug
-	make "CC_FLAGS = $(CC_FLAGS) $(DEBUG_FLAGS)"
-
 $(OBJ): | $(OBJDIR)
 
 $(OBJDIR):
 	mkdir $(OBJDIR)
 
-$(OBJDIR)/%.o: $(SRCDIR)/%.c	#rm debug flags
+$(OBJDIR)/%.o: $(SRCDIR)/%.c
 	$(CC) $(INCLUDE) $(CC_FLAGS) -c $? -o $@
 
 $(LIBFT):
-	make -C $(LIBFTDIR)
+	$(MAKE) -C $(LIBFTDIR)
 
 clean:
 	rm -Rf $(OBJDIR)
-	make clean -C $(LIBFTDIR)
+	$(MAKE) clean -C $(LIBFTDIR)
 
 fclean: clean
 	rm -f $(NAME) $(LIBFT)
 
 re: fclean
-	make
+	$(MAKE)
 
 .PHONY: clean fclean re all
