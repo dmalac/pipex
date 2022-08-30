@@ -6,11 +6,49 @@
 /*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/23 17:39:55 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/08/29 14:53:04 by dmalacov      ########   odam.nl         */
+/*   Updated: 2022/08/30 19:38:59 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
+#include "libft_bonus.h"
+#include <errno.h>
+#include <unistd.h>
+
+static void	write_prompt(size_t total_cmds)
+{
+	size_t	i;
+
+	i = total_cmds - 2;
+	while (i-- > 0)
+		write(1, "pipe ", 5);
+	write(1, "pipe heredoc> ", 14);
+}
+
+static int	heredoc(t_tools *tools, int (*pipe_end)[2], char *param, \
+char *limiter)
+{
+	char	*line;
+
+	line = NULL;
+	if (ft_strncmp(param, "here_doc", 9) != 0)
+		return (tools->input_fd);
+	if (pipe(pipe_end[1]) < 0)
+		error_and_exit(errno, tools, NULL);
+	while (!line || ft_strncmp(line, limiter, ft_strlen(line)) != 0)
+	{
+		if (line)
+		{
+			write(pipe_end[1][W], line, ft_strlen(line));
+			free(line);
+		}
+		write_prompt(tools->total_cmds);
+		line = get_next_line(0);
+	}
+	free(line);
+	close(pipe_end[1][W]);
+	return (pipe_end[1][R]);
+}
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -23,6 +61,7 @@ int	main(int argc, char **argv, char **envp)
 		error_and_exit(INPUT_ERROR, NULL, NULL);
 	tools = tools_init(argc, envp);
 	id = 1;
+	tools->input_fd = heredoc(tools, pipe_end, argv[1], argv[2]);
 	while (tools->cmd <= tools->total_cmds)
 	{
 		if (id > 0)
@@ -30,7 +69,7 @@ int	main(int argc, char **argv, char **envp)
 		if (id == 0)
 			perform_cmd(tools, argv, pipe_end, envp);
 		if (id > 0)
-			close_unnecessary_pipes(tools->cmd, tools->total_cmds, pipe_end);
+			close_unnecessary_pipes(tools, pipe_end);
 		tools->cmd++;
 	}
 	cleanup(tools);

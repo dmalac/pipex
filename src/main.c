@@ -6,7 +6,7 @@
 /*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/23 17:39:55 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/08/29 14:54:09 by dmalacov      ########   odam.nl         */
+/*   Updated: 2022/08/30 19:00:27 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	main(int argc, char **argv, char **envp)
 		if (id == 0)
 			perform_cmd(tools, argv, pipe_end, envp);
 		if (id > 0)
-			close_unnecessary_pipes(tools->cmd, tools->total_cmds, pipe_end);
+			close_unnecessary_pipes(tools, pipe_end);
 		tools->cmd++;
 	}
 	cleanup(tools);

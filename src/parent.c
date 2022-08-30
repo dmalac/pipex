@@ -6,7 +6,7 @@
 /*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/24 17:11:45 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/08/29 11:45:05 by dmalacov      ########   odam.nl         */
+/*   Updated: 2022/08/30 19:05:56 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,17 +75,16 @@ void	pipe_and_fork(int *id, t_tools *tools, int (*pipe_end)[2])
 		error_and_exit(errno, tools, NULL);
 }
 
-void	close_unnecessary_pipes(size_t cmd, size_t total_cmds, \
-int pipe_end[2][2])
+void	close_unnecessary_pipes(t_tools *tools, int pipe_end[2][2])
 {
 	int	reading_pipe;
 	int	writing_pipe;
 
-	reading_pipe = ((cmd - 1) % 2 == 0);
-	writing_pipe = (cmd % 2 == 0);
-	if (cmd < total_cmds)
+	reading_pipe = ((tools->cmd - 1) % 2 == 0);
+	writing_pipe = (tools->cmd % 2 == 0);
+	if (tools->cmd < tools->total_cmds)
 		close(pipe_end[writing_pipe][W]);
-	if (cmd > 1)
+	if (tools->cmd > 1 || tools->input_fd > 0)
 		close(pipe_end[reading_pipe][R]);
 }
 

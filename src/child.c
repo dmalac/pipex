@@ -6,7 +6,7 @@
 /*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/18 18:49:30 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/08/29 18:18:46 by dmalacov      ########   odam.nl         */
+/*   Updated: 2022/08/30 19:07:50 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static char	*prepare_cmd(char *cmd, char **paths)
 
 static void	get_tools(t_tools *tools, char **argv, int pipe_end[2][2])
 {
-	if (tools->cmd == 1)
+	if (tools->cmd == 1 && tools->input_fd < 0)
 		tools->input_fd = get_infile_fd(argv[1]);
 	else
 		tools->input_fd = pipe_end[tools->cmd % 2 == 1][R];
