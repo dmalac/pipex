@@ -12,7 +12,8 @@ INCLUDE = -I $(INCL_DIR)
 LIBFT = $(LIBFTDIR)/libft.a
 LIBFT_BONUS = $(LIBFTDIR)/libft_bonus.a
 SRC_FILES = main.c parent.c child.c files_ops.c cleanup.c
-BONUS_SRC_FILES = main_bonus.c parent.c child.c files_ops.c cleanup_bonus.c
+BONUS_SRC_FILES = main_bonus.c parent_bonus.c child_bonus.c files_ops_bonus.c \
+cleanup_bonus.c
 SRC = $(addprefix $(SRCDIR)/,$(SRC_FILES))
 OBJ = $(addprefix $(OBJDIR)/,$(SRC_FILES:.c=.o))
 BONUS_SRC = $(addprefix $(SRCDIR)/,$(BONUS_SRC_FILES))

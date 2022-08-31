@@ -6,11 +6,11 @@
 /*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/23 17:39:55 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/08/31 11:23:25 by dmalacov      ########   odam.nl         */
+/*   Updated: 2022/08/31 12:29:46 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "main.h"
+#include "main_bonus.h"
 #include "libft_bonus.h"
 #include <errno.h>
 #include <unistd.h>
@@ -36,7 +36,8 @@ char *limiter)
 	if (pipe(pipe_end[0]) < 0)
 		error_and_exit(errno, tools, NULL);
 	write_prompt(tools->total_cmds);
-	while (!line || ft_strncmp(line, limiter, ft_strlen(line) - 1) != 0)
+	while (!line || (ft_strncmp(line, limiter, ft_strlen(limiter)) != 0 && \
+	line[ft_strlen(limiter)] != '\n'))
 	{
 		if (line)
 		{
@@ -48,6 +49,7 @@ char *limiter)
 	}
 	free(line);
 	close(pipe_end[0][W]);
+	tools->is_heredoc = 1;
 	return (tools->cmd + 1);
 }
 
