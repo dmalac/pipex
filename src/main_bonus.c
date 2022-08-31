@@ -6,7 +6,7 @@
 /*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/23 17:39:55 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/08/31 12:29:46 by dmalacov      ########   odam.nl         */
+/*   Updated: 2022/08/31 14:37:29 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,8 @@ char *limiter)
 	if (pipe(pipe_end[0]) < 0)
 		error_and_exit(errno, tools, NULL);
 	write_prompt(tools->total_cmds);
-	while (!line || (ft_strncmp(line, limiter, ft_strlen(limiter)) != 0 && \
-	line[ft_strlen(limiter)] != '\n'))
+	while (!line || ft_strncmp(line, limiter, ft_strlen(limiter)) != 0 || \
+	line[ft_strlen(limiter)] != '\n')
 	{
 		if (line)
 		{

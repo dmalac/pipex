@@ -6,14 +6,14 @@
 /*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/24 17:11:45 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/08/31 12:29:40 by dmalacov      ########   odam.nl         */
+/*   Updated: 2022/08/31 14:28:12 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
 #include <errno.h>
 #include "main_bonus.h"
-#include "libft.h"
+#include "libft_bonus.h"
 
 char	**get_paths(char **environ)
 {

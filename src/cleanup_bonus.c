@@ -6,14 +6,14 @@
 /*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/29 10:59:21 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/08/31 12:29:54 by dmalacov      ########   odam.nl         */
+/*   Updated: 2022/08/31 14:27:58 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <string.h>
 #include <unistd.h>
 #include "main_bonus.h"
-#include "libft.h"
+#include "libft_bonus.h"
 
 void	free_array(char **array)
 {

@@ -6,12 +6,12 @@
 /*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/18 18:49:30 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/08/31 12:29:28 by dmalacov      ########   odam.nl         */
+/*   Updated: 2022/08/31 14:27:51 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main_bonus.h"
-#include "libft.h"
+#include "libft_bonus.h"
 #include "errno.h"
 #include <unistd.h>
 
