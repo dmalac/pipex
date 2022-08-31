@@ -23,11 +23,9 @@ all: $(NAME)
 
 ifeq ($(BONUS),1)
 $(NAME): $(BONUS_OBJ) $(LIBFT_BONUS)
-	echo $(BONUS)
 	$(CC) $(INCLUDE) $(CC_FLAGS) -o $@ $^
 else
 $(NAME): $(OBJ) $(LIBFT)
-	echo $(BONUS)
 	$(CC) $(INCLUDE) $(CC_FLAGS) -o $@ $^
 endif
 
