@@ -5,7 +5,7 @@ OBJDIR = obj
 INCL_DIR = ../incl
 
 CC = gcc
-CC_FLAGS = -Wall -Wextra -Werror 
+CC_FLAGS = -Wall -Wextra -Werror
 INCLUDE = -I $(INCL_DIR)
 
 SRCS = ft_putstr_fd.c ft_split.c ft_strjoin.c ft_strlen.c ft_strncmp.c 

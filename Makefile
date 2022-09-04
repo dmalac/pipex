@@ -6,7 +6,7 @@ LIBFTDIR = libft
 INCL_DIR = incl
 
 CC = gcc
-CC_FLAGS = -Wall -Wextra -Werror 
+CC_FLAGS = -Wall -Wextra -Werror
 INCLUDE = -I $(INCL_DIR)
 
 LIBFT = $(LIBFTDIR)/libft.a

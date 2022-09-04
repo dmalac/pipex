@@ -6,7 +6,7 @@
 /*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/23 17:39:55 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/08/30 19:00:27 by dmalacov      ########   odam.nl         */
+/*   Updated: 2022/09/04 17:19:24 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,9 @@ int	main(int argc, char **argv, char **envp)
 			close_unnecessary_pipes(tools, pipe_end);
 		tools->cmd++;
 	}
-	cleanup(tools);
 	exit_code = 0;
 	if (id > 0)
 		exit_code = wait_for_last_child(id, tools->total_cmds);
+	cleanup(tools);
 	return (exit_code);
 }
